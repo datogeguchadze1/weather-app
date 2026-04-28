@@ -1,0 +1,13 @@
+@if (cities().length > 0) {
+  <div class="saved">
+    <p class="label">შენახული ქალაქები</p>
+    <div class="list">
+      @for (city of cities(); track city.query) {
+        <button class="city-chip glass" (click)="select(city.query)">
+          {{ city.name }}
+          <span class="remove" (click)="remove(city.query, $event)">×</span>
+        </button>
+      }
+    </div>
+  </div>
+}

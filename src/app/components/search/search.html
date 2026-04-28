@@ -1,0 +1,25 @@
+<div class="search-wrapper">
+  <div class="search-box glass">
+    <span class="icon">🔍</span>
+    <input
+      type="text"
+      placeholder="ქალაქის ძებნა..."
+      [value]="query()"
+      (input)="onInput($event)"
+      (keyup.enter)="submit()"
+      (blur)="onBlur()"
+    />
+    <button class="loc-btn" (click)="useLocation.emit()" title="ჩემი მდებარეობა">📍</button>
+  </div>
+
+  @if (showDropdown()) {
+    <div class="dropdown glass">
+      @for (r of results(); track r.id) {
+        <button class="dropdown-item" (mousedown)="select(r)">
+          <span class="city-name">{{ r.name }}</span>
+          <span class="city-sub">{{ r.region }}, {{ r.country }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>

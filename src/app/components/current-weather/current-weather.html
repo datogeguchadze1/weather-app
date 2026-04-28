@@ -1,0 +1,45 @@
+<div class="current glass">
+  <div class="location-row">
+    <div>
+      <h1 class="city">{{ weather.location.name }}</h1>
+      <p class="sub">{{ weather.location.region }}, {{ weather.location.country }}</p>
+      <p class="time">{{ weather.location.localtime }}</p>
+    </div>
+    <img [src]="iconUrl" [alt]="weather.current.condition.text" class="cond-icon" />
+  </div>
+
+  <div class="temp-row">
+    <span class="temp">{{ temp | number:'1.0-0' }}°{{ unit }}</span>
+    <div class="meta">
+      <p class="condition">{{ weather.current.condition.text }}</p>
+      <p class="feels">შეგრძნება: {{ feelsLike | number:'1.0-0' }}°</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat">
+      <span class="label">💧 ტენიანობა</span>
+      <span class="val">{{ weather.current.humidity }}%</span>
+    </div>
+    <div class="stat">
+      <span class="label">💨 ქარი</span>
+      <span class="val">{{ wind }}</span>
+    </div>
+    <div class="stat">
+      <span class="label">👁 ხილვადობა</span>
+      <span class="val">{{ weather.current.vis_km }} კმ</span>
+    </div>
+    <div class="stat">
+      <span class="label">🌡 წნევა</span>
+      <span class="val">{{ weather.current.pressure_mb }} hPa</span>
+    </div>
+    <div class="stat">
+      <span class="label">☀️ UV ინდექსი</span>
+      <span class="val">{{ weather.current.uv }}</span>
+    </div>
+    <div class="stat">
+      <span class="label">🧭 ქარის მიმართ.</span>
+      <span class="val">{{ weather.current.wind_dir }}</span>
+    </div>
+  </div>
+</div>
