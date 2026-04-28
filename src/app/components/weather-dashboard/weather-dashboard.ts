@@ -24,21 +24,11 @@ export class WeatherDashboard implements OnInit {
   loading = signal(false);
   error = signal('');
   unit = signal<'C' | 'F'>('C');
-  showApiKeyInput = signal(false);
-  apiKeyInput = signal('');
 
   ngOnInit(): void {
     this.unit.set(this.weatherService.getUnit());
-    if (!this.weatherService.getApiKey()) {
-      this.showApiKeyInput.set(true);
-      return;
-    }
     const query = this.route.snapshot.paramMap.get('query');
     this.load(query ?? 'Tbilisi');
-  }
-
-  onApiKeyInput(event: Event): void {
-    this.apiKeyInput.set((event.target as HTMLInputElement).value);
   }
 
   load(query: string): void {
@@ -49,7 +39,7 @@ export class WeatherDashboard implements OnInit {
         this.weather.set(data);
         this.loading.set(false);
       },
-      error: (err: { error?: { error?: { message?: string } } }) => {
+      error: (err: any) => {
         this.error.set(err?.error?.error?.message ?? 'ქალაქი ვერ მოიძებნა');
         this.loading.set(false);
       }
@@ -83,14 +73,6 @@ export class WeatherDashboard implements OnInit {
     const u = this.unit() === 'C' ? 'F' : 'C';
     this.unit.set(u);
     this.weatherService.setUnit(u);
-  }
-
-  saveApiKey(): void {
-    const key = this.apiKeyInput().trim();
-    if (!key) return;
-    this.weatherService.setApiKey(key);
-    this.showApiKeyInput.set(false);
-    this.load('Tbilisi');
   }
 
   get bgGradient(): string {

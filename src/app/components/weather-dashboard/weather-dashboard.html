@@ -1,74 +1,67 @@
 <div class="dashboard" [style.background]="bgGradient">
 
-  @if (showApiKeyInput()) {
-    <div class="api-setup">
-      <div class="api-card glass">
-        <div class="api-icon">🌤️</div>
-        <h1>Weather App</h1>
-        <p>შეიყვანე WeatherAPI.com-ის API გასაღები</p>
-        <div class="api-form">
-          <input
-            type="text"
-            placeholder="API გასაღები..."
-            [value]="apiKeyInput()"
-            (input)="onApiKeyInput($event)"
-            (keyup.enter)="saveApiKey()"
-          />
-          <button (click)="saveApiKey()" class="btn-primary">დაწყება</button>
-        </div>
-        <a href="https://www.weatherapi.com/signup.aspx" target="_blank" class="link">
-          უფასო API გასაღების მიღება →
-        </a>
+  <div class="layout">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">⛅ Weather</div>
+      <div class="header-right">
+        <button class="unit-toggle" (click)="toggleUnit()">
+          °{{ unit() === 'C' ? 'F' : 'C' }}
+        </button>
+        <button class="btn-ghost" (click)="onSaveCity()" *ngIf="weather()">
+          ⭐ შენახვა
+        </button>
       </div>
     </div>
-  }
 
-  @if (!showApiKeyInput()) {
-    <div class="layout">
-      <header class="header">
-        <span class="logo">⛅ Weather</span>
-        <div class="header-right">
-          <button class="unit-toggle" (click)="toggleUnit()">
-            °{{ unit() === 'C' ? 'F' : 'C' }} გადართვა
-          </button>
-          <button class="btn-ghost" (click)="showApiKeyInput.set(true)">🔑</button>
-        </div>
-      </header>
+    <!-- Search -->
+    <app-search 
+      (citySelected)="onCitySelect($event)" 
+      (useLocation)="onUseLocation()">
+    </app-search>
 
-      <app-search (citySelected)="onCitySelect($event)" (useLocation)="onUseLocation()" />
+    <!-- Saved Cities -->
+    <app-saved-cities (citySelected)="onCitySelect($event)"></app-saved-cities>
 
-      <app-saved-cities (citySelected)="onCitySelect($event)" />
+    @if (loading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>მონაცემები იტვირთება...</p>
+      </div>
+    }
 
-      @if (loading()) {
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>მონაცემები იტვირთება...</p>
-        </div>
-      }
+    @if (error()) {
+      <div class="error">⚠️ {{ error() }}</div>
+    }
 
-      @if (error()) {
-        <div class="error-box">
-          ⚠️ {{ error() }}
-        </div>
-      }
+    @if (weather() && !loading()) {
+      <div class="content">
 
-      @if (weather() && !loading()) {
-        <div class="content">
-          <div class="save-row">
-            <button class="btn-save" (click)="onSaveCity()">⭐ ქალაქის შენახვა</button>
-          </div>
-          <app-current-weather [weather]="weather()!" [unit]="unit()" />
-          <app-hourly-chart [hours]="weather()!.forecast.forecastday[0].hour" [unit]="unit()" />
-          <div class="forecast-section">
-            <h2 class="section-title">7-დღიანი პროგნოზი</h2>
-            <div class="forecast-grid">
-              @for (day of weather()!.forecast.forecastday; track day.date) {
-                <app-forecast-card [day]="day" [unit]="unit()" />
-              }
-            </div>
+        <app-current-weather 
+          [weather]="weather()!" 
+          [unit]="unit()">
+        </app-current-weather>
+
+        <app-hourly-chart 
+          [hours]="weather()!.forecast.forecastday[0].hour" 
+          [unit]="unit()">
+        </app-hourly-chart>
+
+        <div>
+          <div class="section-title">7-დღიანი პროგნოზი</div>
+          <div class="forecast-grid">
+            @for (day of weather()!.forecast.forecastday; track day.date) {
+              <app-forecast-card 
+                [day]="day" 
+                [unit]="unit()">
+              </app-forecast-card>
+            }
           </div>
         </div>
-      }
-    </div>
-  }
+
+      </div>
+    }
+
+  </div>
 </div>

@@ -41,11 +41,20 @@ export class WeatherService {
   private http = inject(HttpClient);
   private readonly BASE_URL = 'https://api.weatherapi.com/v1';
   private apiKey = '';
+  private readonly DEFAULT_API_KEY = '18ae614badbc44e1a10131039262804'; // შენი key
 
-  setApiKey(key: string): void { this.apiKey = key; localStorage.setItem('weatherapi_key', key); }
+  setApiKey(key: string): void { 
+    this.apiKey = key; 
+    localStorage.setItem('weatherapi_key', key); 
+  }
 
   getApiKey(): string {
-    if (!this.apiKey) this.apiKey = localStorage.getItem('weatherapi_key') ?? '';
+    if (!this.apiKey) {
+      this.apiKey = localStorage.getItem('weatherapi_key') || this.DEFAULT_API_KEY;
+      if (this.apiKey) {
+        localStorage.setItem('weatherapi_key', this.apiKey);
+      }
+    }
     return this.apiKey;
   }
 
